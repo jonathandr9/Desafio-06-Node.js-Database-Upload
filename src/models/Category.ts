@@ -1,19 +1,20 @@
 import {
-   Column,
-   CreateDateColumn,
-   UpdateDateColumn,
-   PrimaryGeneratedColumn,
-  } from 'typeorm'
+  Entity,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
+@Entity('categories')
 class Category {
-
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
   title: string;
 
-  @CreateDateDolumn()
+  @CreateDateColumn()
   created_at: Date;
 
   @UpdateDateColumn()
