@@ -1,7 +1,7 @@
-import { getRepository } from 'typeorm';
+import { getRepository, getCustomRepository } from 'typeorm';
 
 import AppError from '../errors/AppError';
-import Transaction from '../models/Transaction';
+import TransactionsRepository from '../repositories/TransactionsRepository';
 import Category from '../models/Category';
 
 interface Request {
@@ -18,29 +18,21 @@ class CreateTransactionService {
     type,
     category,
   }: Request): Promise<Transaction> {
-    const transactionsRepository = getRepository(Transaction);
+    const transactionsRepository = getCustomRepository(TransactionsRepository);
     const categoryRepository = getRepository(Category);
 
     try {
-      const categoryExists = await categoryRepository.findOne({
+      let categorySaved = await categoryRepository.findOne({
         title: category,
       });
 
-      if (!categoryExists) {
-        const categoryCreate = await categoryRepository.create({
+      if (!categorySaved) {
+        categorySaved = await categoryRepository.create({
           title: category,
         });
 
-        await categoryRepository.save(categoryCreate);
+        await categoryRepository.save(categorySaved);
       }
-
-      const categorySaved = await categoryRepository.findOne({
-        title: category,
-      });
-
-      // if (findAppointmentInSameDate) {
-      //   throw AppError('This repository is already booked');
-      // }
 
       const transaction = transactionsRepository.create({
         title,
@@ -53,7 +45,7 @@ class CreateTransactionService {
 
       return transaction;
     } catch (err) {
-      throw AppError('This repository is already booked');
+      // throw AppError('This repository is already booked');
     }
   }
 }
