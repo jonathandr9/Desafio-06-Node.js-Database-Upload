@@ -36,7 +36,15 @@ transactionsRouter.post('/', async (request, response) => {
 });
 
 transactionsRouter.delete('/:id', async (request, response) => {
-  // TODO
+  const { id } = request.params;
+
+  const transactionRepository = getCustomRepository(TransactionRepository);
+
+  const transaction = await transactionRepository.findOne(id);
+
+  await transactionRepository.remove(transaction);
+
+  return response.json();
 });
 
 transactionsRouter.post('/import', async (request, response) => {
