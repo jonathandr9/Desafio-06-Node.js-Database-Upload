@@ -42,7 +42,9 @@ transactionsRouter.delete('/:id', async (request, response) => {
 
   const transaction = await transactionRepository.findOne(id);
 
-  await transactionRepository.remove(transaction);
+  if (transaction) {
+    await transactionRepository.remove(transaction);
+  }
 
   return response.json();
 });
